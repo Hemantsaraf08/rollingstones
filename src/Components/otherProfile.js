@@ -1,8 +1,8 @@
-import React,{ useState, useEffect } from 'react'
+import React,{ useState, useEffect, useContext } from 'react'
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { database } from "../../firebase"
+import { database } from "../firebase"
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Header from './Feeds/Header';
@@ -39,7 +39,7 @@ const otherUserVidsstyle={
     alignItems: 'stretch',
 }
 
-function otherProfile(props) {
+function OtherProfile(props) {
 
     let userProfileObj=props.history.location.state.obj;
     const classes = useStyles();
@@ -65,10 +65,6 @@ function otherProfile(props) {
         }
         setPostsArr(tempArr);
     },[])
-    useEffect(async ()=>{
-        //check text of button and disable if needed
-        
-    },[userProfileObj])
     const handleClick=()=>{
         setButtonTxt("Request Sent");      
         database.users.doc(userProfileObj.userId).update({
@@ -79,19 +75,19 @@ function otherProfile(props) {
         <>
         <Header></Header>
         <div className="profileInfo" style={profileInfostyle}>
-            <div className="profileAvatar" style={{width='30%'}}>
+            <div className="profileAvatar" style={{width:'30%'}}>
                 <Avatar src={userProfileObj.profileUrl}/>
             </div>
-            <div className="otherInfo" style={{width='70%'}}>
+            <div className="otherInfo" style={{width:'70%'}}>
                 <h2>userProfileObj.username</h2>
                 <div className="proflestats"  style={profilestatsstyle}>
                     <div className='postsStats' style={{width:'50%'}}>
-                        <Typography className="statsNumber" style={{ display="block"}}>{userProfileObj.postIds.length}</Typography>
-                        <Typography className="statsText" style={{ display="block"}}>Posts</Typography>
+                        <Typography className="statsNumber" style={{ display:"block"}}>{userProfileObj.postIds.length}</Typography>
+                        <Typography className="statsText" style={{ display:"block"}}>Posts</Typography>
                     </div>
                     <div className='followersStats' style={{width:'50%'}}>
-                        <Typography className="statsNumber" style={{ display="block"}}>{userProfileObj.friends?.length}</Typography>
-                        <Typography className="statsText" style={{ display="block"}}>Followers</Typography>
+                        <Typography className="statsNumber" style={{ display:"block"}}>{userProfileObj.friends?.length}</Typography>
+                        <Typography className="statsText" style={{ display:"block"}}>Followers</Typography>
                     </div>
                 </div>
                 <Button onClick={handleClick} variant="contained" color="primary" disabled={buttontxt==="Following"||"Request Sent"}>{buttontxt}</Button>
@@ -99,11 +95,11 @@ function otherProfile(props) {
         </div>
         <div className="VideoPosts" style={VideoPostsstyle}>
             {
-                userProfileObj.postIds.length==0?<Typography component="h4">No Posts to display</Typography>:postsArr==null?<CircularProgress className={classes.loader} color="secondary"/>:
+                userProfileObj.postIds.length===0?<Typography component="h4">No Posts to display</Typography>:postsArr==null?<CircularProgress className={classes.loader} color="secondary"/>:
                 <div className='otherUserVids' style={otherUserVidsstyle}>
                     {
                         postsArr.map(post=>(
-                            <video src={post} muted></video>
+                            <video src={post.pUrl} muted id={post.pId} width='400'></video>
                         ))
                     }    
                 </div>
@@ -113,4 +109,4 @@ function otherProfile(props) {
     )
 }
 
-export default otherProfile
+export default OtherProfile

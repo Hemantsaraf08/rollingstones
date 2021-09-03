@@ -1,0 +1,14 @@
+/* 
+.center{
+    height: 86vh;
+} */
+
+.feed-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 82vh;
+    border: 2px solid;
+    scrollbar-width: none;
+}

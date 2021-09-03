@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthProvider';
 import { database } from '../../firebase'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Posts from './Posts';
+import './Feed.css'
 function Feed() {
     const { currentUser } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
@@ -24,7 +25,7 @@ function Feed() {
     const unsub = database.users.orderBy('createdAt', 'desc').onSnapshot(querySnapshot => {
         let userDataIn;
         querySnapshot.forEach(doc=>{
-            if(doc.data().userId!=currentUser.uid){
+            if(doc.data().userId!==currentUser.uid){
                 let oUser=doc.data();
                 otherUsers.push(oUser)
             }else{
@@ -34,19 +35,17 @@ function Feed() {
         setUserData({...userDataIn});
         setOtherUser(otherUsers);
     })
-    
-    console.log(userData);
+
+    return ()=>unsub()
 },[currentUser])
 console.log(otherUserData)
     return (
         <>
-            {userData == null ? <CircularProgress style={{ position: "fixed", top: "50%", left: "50%" }} /> : <>
+            {userData === null ? <CircularProgress style={{ position: "fixed", top: "50%", left: "50%" }} /> : <>
                 <Header otherUsers={otherUserData} userDocumentData={userData} />
-                <div style={{ height: '1.5vh' }} />
+                <div style={{ height: '2.5vh' }} />
                 <div className='feed-container'>
-                    <div className='center'>
                         <Posts userData={userData} />
-                    </div>
                 </div>
             </>
             }

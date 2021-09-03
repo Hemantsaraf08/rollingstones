@@ -42,7 +42,7 @@ function AuthProvider({children}) {
             {/* this is how logical operators work in JS:(exp1&&exp2) Returns expr1 if it can be converted to false; otherwise, 
             returns expr2.
             Thus, when used with Boolean values, && returns true if both operands are true; otherwise, returns false. */}
-            {/* {!loading?children:} //this is another way of doing this, if loading is false render children */}
+            {/* {!loading?children:<></>} //this is another way of doing this, if loading is false render children */}
         </AuthContext.Provider>
     )
 }

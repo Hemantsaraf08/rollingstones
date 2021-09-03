@@ -80,6 +80,8 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: 'none',
         border: "solid",
         borderWidth: "thin",
+        fontWeight: 'bold',
+        fontFamily:'cursive'
         // fontSize: 16,
     },
 }));
@@ -145,7 +147,7 @@ function SignUp() {
             console.log('User has Signed up');
             history.push('/')
         } catch (e) {
-            setError(e)
+            setError(e.message)
             setTimeout(() => setError(''), 2000);
             setLoading(false)
         }
@@ -186,7 +188,7 @@ function SignUp() {
                 <div className={classes.messageLogin}>
                     <span className={classes.messageBody}>Sign Up</span>
                 </div>
-                <form className={classes.formBlock} noValidate autoComplete="off" onSubmit={handleSignUp}>
+                <form className={classes.formBlock} autoComplete="off" onSubmit={handleSignUp}>
 
                     <TextField id="outlined-basic"
                         type="text"

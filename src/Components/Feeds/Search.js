@@ -58,7 +58,13 @@ function Search({ oUsers }) {
   const classes = useStyle()
   const history=useHistory()
   const modalStyle={
-    display: text.length===0?"none":'block'
+    display: text.length===0?"none":'block',
+    position: 'absolute',
+    zIndex: "2",
+    top: "10vh",
+    width: "18rem",
+    backgroundColor: "azure",
+    borderRadius: "10px"
   }
   const handleChange = (e) => {
     let txt = e.target.value;
@@ -66,7 +72,7 @@ function Search({ oUsers }) {
     console.log(txt)
     
     let res = oUsers.filter(usersObj => usersObj.username.toLowerCase().includes(txt.trim().toLowerCase()));
-    if(txt.length == 0){
+    if(txt.length === 0){
       res=[];
     }
     setText(txt);
@@ -97,10 +103,10 @@ function Search({ oUsers }) {
         />
       </div>
       <div aria-labelledby="simple-dialog-title" style={modalStyle}>
-        {resultArr?.length == 0 ? <DialogTitle id="simple-dialog-title">User not found..</DialogTitle> : <>
+        {resultArr?.length === 0 ? <DialogTitle id="simple-dialog-title">User not found..</DialogTitle> : <>
           <List>
             {resultArr?.map((userObj) => (
-              <ListItem button onClick={() => handleListItemClick(userObj)} key={userObj.userId}>
+              <ListItem button onClick={() => handleListItemClick(userObj)} key={userObj.userId} divider>
                 <ListItemAvatar>
                   <Avatar className={classes.avatar} src={userObj?.profileUrl} />
                 </ListItemAvatar>

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {makeStyles} from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import {database} from '../../firebase'
+import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     like:{
         color:'#e74c3c',
@@ -20,13 +21,13 @@ function Likes({userData=null, userPostData=null}) {
     useEffect(()=>{
         let check = userPostData.likes.includes(userData?.userId)?true:false;
         setLike(check);
-    },[userPostData])
+    },[userPostData, userData])
 
     const handleLike=async()=>{
-        if(like==true){
+        if(like===true){
             //then unlike
             let newArr=userPostData.likes.filter(li=>{
-                return li!=userData.userId;
+                return li!==userData.userId;
             })
             await database.posts.doc(userPostData.postId).update({
                 likes:newArr
@@ -44,8 +45,8 @@ function Likes({userData=null, userPostData=null}) {
         {
             like!=null?<>
             {
-                like==false?<FavoriteIcon className={`${classes.unlike} icon-styling`} onClick={handleLike}/>:
-                <FavoriteIcon className={`${classes.like} icon-styling`} onClick={handleLike} />
+                like===false?<div onClick={handleLike}><Typography>Like</Typography><FavoriteIcon className={`${classes.unlike} icon-styling`} /></div>:
+                <div onClick={handleLike}><Typography>Liked</Typography><FavoriteIcon className={`${classes.like} icon-styling`}  /></div>
             }
             </>:<></>
         }

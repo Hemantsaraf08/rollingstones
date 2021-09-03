@@ -121,13 +121,13 @@ function SignIN() {
         <div className={classes.SignINcomp}  
             style={{backgroundImage:`url(${bpic})`,
             }}>
-            {error?<h1>{error}</h1>:<div className={classes.signINcard}>
+            {error?<div><h1 style={{backgroundColor: "black", color: "white"}}>{error.message}</h1></div>:<div className={classes.signINcard}>
                 <div className={styles.appName}>RollingStones</div>
                 <p className={classes.message}>A place to share your travel memories</p>
                 <div className={classes.messageLogin}>
                     <span className={classes.messageBody}>Log in</span>
                 </div>
-            <form className={classes.formBlock} noValidate autoComplete="off" onSubmit={handleSignIn}>
+            <form className={classes.formBlock}  autoComplete="off" onSubmit={handleSignIn}>
                 
                 <TextField id="outlined-basic"
                     type="email"

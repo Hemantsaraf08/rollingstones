@@ -55,7 +55,7 @@ function Addcomments({userData=null, postData=null}) {
                 <Smile/>
             </Button>
             <TextField value={text} fullWidth={true} label='Add a comment' onChange={manageText}/>
-            <Button onClick={handleOnEnter} disabled={text==''?true:false} className ={classes.cbtn} color='primary'>Post</Button>
+            <Button onClick={handleOnEnter} disabled={text===''?true:false} className ={classes.cbtn} color='primary'>Post</Button>
         </div>
     )
 }

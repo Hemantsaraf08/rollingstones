@@ -30,34 +30,15 @@ const useStyles = makeStyles({
     typo: {
         marginLeft: '2%'
     },
-    vac: {
-        marginLeft: '3.5%',
-        color: '#8e8e8e',
-        cursor: 'pointer'
-    },
-    dp: {
-        marginLeft: '2%'
-    },
-    cc: {
-        height: '50vh',
-        overflowY: 'auto'
-    },
     seeComments: {
         height: '54vh',
         overflowY: 'auto'
     },
     ci: {
-
         color: 'white',
         left: '9%',
         cursor: 'pointer'
     },
-    mn: {
-        color: 'white',
-    },
-    tmn: {
-        color: 'white'
-    }
 });
 function Posts({ userData = null }) {
     const classes = useStyles();
@@ -124,62 +105,66 @@ function Posts({ userData = null }) {
             <div className='place'>
             </div>
             {
-                posts == null ? <CircularProgress className={classes.loader} color="secondary" /> :
+                posts === null ? <CircularProgress className={classes.loader} color="secondary" /> :
                     <div className='video-container' id='video-container'>
                         {
-                            posts.map((post) =>{
+                            posts.map((post) => {
                                 console.log(post)
-                            return (
-                                <React.Fragment key={post.postId}>
-                                    <div className='videos'>
-                                        <Video source={post.pUrl} id={post.pId} />
-                                        <div className='fa' style={{ display: 'flex' }}>
-                                            <Avatar src={post.uProfile}></Avatar>
-                                            <h4>{post.uName}</h4>
+                                return (
+                                    <React.Fragment key={post.postId}>
+                                        <div className='videos'>
+                                            <Video source={post.pUrl} id={post.pId} />
+                                            <div className='fa' style={{ display: 'flex' }}>
+                                                <Avatar src={post.uProfile}></Avatar>
+                                                <h4>{post.uName}</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <Likes userData={userData} userPostData={post} />
-                                    <ChatBubbleIcon onClick={() => handleClickOpen(post.pId)} className={`${classes.ci} icon-styling`} />
-                                    <Dialog maxWidth="md" onClose={handleClose} aria-labelledby="customized-dialog-title" open={openId === post.pId}>
-                                        <MuiDialogContent>
-                                            <div className='dcontainer'>
-                                                <div className='video-part'>
-                                                    <video autoPlay={true} className='video-styles2' controls id={post.id} muted="muted" type="video/mp4" >
-                                                        <source src={post.pUrl} type="video/webm" />
-                                                    </video>
-                                                </div>
-                                                <div className='info-part'>
-                                                    <Card>
-                                                        <CardHeader
-                                                            avatar={
-                                                                <Avatar src={post?.uProfile} aria-label="recipe" className={classes.avatar}>
-                                                                </Avatar>
-                                                            }
-                                                            action={
-                                                                <IconButton aria-label="settings">
-                                                                    <MoreVertIcon />
-                                                                </IconButton>
-                                                            }
-                                                            title={post?.uName}
+                                        <Likes userData={userData} userPostData={post} />
+                                        <div onClick={() => handleClickOpen(post.pId)}>
+                                            <Typography>Comment</Typography>
+                                            <ChatBubbleIcon className={`${classes.ci} icon-styling`} />
+                                        </div>
+                                        <Dialog maxWidth="md" onClose={handleClose} aria-labelledby="customized-dialog-title" open={openId === post.pId}>
+                                            <MuiDialogContent>
+                                                <div className='dcontainer'>
+                                                    <div className='video-part'>
+                                                        <video autoPlay={true} className='video-styles2' controls id={post.id} muted="muted" type="video/mp4" >
+                                                            <source src={post.pUrl} type="video/webm" />
+                                                        </video>
+                                                    </div>
+                                                    <div className='info-part'>
+                                                        <Card>
+                                                            <CardHeader
+                                                                avatar={
+                                                                    <Avatar src={post?.uProfile} aria-label="recipe" className={classes.avatar}>
+                                                                    </Avatar>
+                                                                }
+                                                                action={
+                                                                    <IconButton aria-label="settings">
+                                                                        <MoreVertIcon />
+                                                                    </IconButton>
+                                                                }
+                                                                title={post?.uName}
 
-                                                        />
-                                                        <hr style={{ border: "none", height: "1px", color: "#dfe6e9", backgroundColor: "#dfe6e9" }} />
-                                                        <CardContent className={classes.seeComments}>
-                                                            <Comments userData={userData} userPostData={post} />
-                                                        </CardContent>
-                                                    </Card>
-                                                    <div className='extra'>
-                                                        <div className='likes'>
-                                                            <Typography className={classes.typo} variant='body2'>Liked By {post.likes.length == 0 ? 'nobody' : ` others`}</Typography>
+                                                            />
+                                                            <hr style={{ border: "none", height: "1px", color: "#dfe6e9", backgroundColor: "#dfe6e9" }} />
+                                                            <CardContent className={classes.seeComments}>
+                                                                <Comments userData={userData} userPostData={post} />
+                                                            </CardContent>
+                                                        </Card>
+                                                        <div className='extra'>
+                                                            <div className='likes' style={{ display: post.likes.length ? 'block' : 'none' }}>
+                                                                <Typography className={classes.typo} variant='subtitle2'>{post.likes.length} Likes</Typography>
+                                                            </div>
+                                                            <Addcomments userData={userData} postData={post} />
                                                         </div>
-                                                        <Addcomments userData={userData} postData={post} />
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </MuiDialogContent>
-                                    </Dialog>
-                                </React.Fragment>
-                            )}
+                                            </MuiDialogContent>
+                                        </Dialog>
+                                    </React.Fragment>
+                                )
+                            }
                             )
                         }
                     </div>
