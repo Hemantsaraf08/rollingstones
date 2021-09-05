@@ -3,19 +3,16 @@ import { AuthContext } from '../../context/AuthProvider';
 import styles from "./signIN.module.css"
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { FormControl, Input, InputAdornment } from '@material-ui/core';
+import {InputAdornment } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Button from '@material-ui/core/Button';
-// import { Link as RouterLink } from 'react-router-dom';
 import bpic from "./signIN_bg.png"
 import { useHistory } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
-import SignUp from '../SignUp_comp/SignUp';
 const useStyles = makeStyles((theme) => ({
     formBlock: {
         marginTop: "1.5rem",

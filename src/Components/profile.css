@@ -1,0 +1,6 @@
+.profileAvatar{
+    margin: auto;
+    width: 25%;
+    display: flex;
+    justify-content: center;
+}

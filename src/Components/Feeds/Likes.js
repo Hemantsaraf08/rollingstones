@@ -1,23 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import {makeStyles} from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import {database} from '../../firebase'
 import Typography from '@material-ui/core/Typography';
-const useStyles = makeStyles({
-    like:{
-        color:'#e74c3c',
-        cursor:'pointer',
-        // fill: "red",
-        // fontSize: "large"
-    },
-    unlike:{
-        color:'white',
-        cursor:'pointer'
-    }
-})
+
 function Likes({userData=null, userPostData=null}) {
     const[like, setLike]=useState(null);
-    const classes = useStyles();    
     useEffect(()=>{
         let check = userPostData.likes.includes(userData?.userId)?true:false;
         setLike(check);
@@ -41,12 +28,12 @@ function Likes({userData=null, userPostData=null}) {
         }
     }
     return (
-        <div>
+        <div style={{width: '50%', display: "flex", alignItems: 'center', justifyContent: 'center'}}>
         {
             like!=null?<>
             {
-                like===false?<div onClick={handleLike}><Typography>Like</Typography><FavoriteIcon className={`${classes.unlike} icon-styling`} /></div>:
-                <div onClick={handleLike}><Typography>Liked</Typography><FavoriteIcon className={`${classes.like} icon-styling`}  /></div>
+                like===false?<div style={{display: 'flex', flexDirection:'row', width: '100%', justifyContent: 'space-evenly'}}onClick={handleLike}><Typography variant="h6">Like</Typography><FavoriteIcon  color="action" className={`icon-styling`} /></div>:
+                <div style={{display: 'flex', flexDirection:'row', width: '100%', justifyContent: 'space-evenly'}} onClick={handleLike}><Typography variant="h6">Liked</Typography><FavoriteIcon color="secondary" className={`icon-styling`}  /></div>
             }
             </>:<></>
         }

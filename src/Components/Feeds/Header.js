@@ -18,8 +18,11 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { storage, database } from '../../firebase'
 import Alert from '@material-ui/lab/Alert';
 import Search from './Search'
+import FriendRequests from './FriendRequests';
 import {AuthContext} from '../../context/AuthProvider'
 import { useHistory } from 'react-router-dom';
+
+
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -77,14 +80,27 @@ function Header({userDocumentData, otherUsers}) {
   const history=useHistory();
   const {logout}=useContext(AuthContext)
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] =useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [requestIconClicked, setRequestIconClicked]=useState(false);
   // console.log(database.users);
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleProfileClick=(e)=>{
+    history.push({
+      pathname: '/myProfile',
+      state: {userDocumentData}
+    });
+  }
+  const handleFeedbackClick=()=>{
+    window.open("https://docs.google.com/forms/d/e/1FAIpQLSfTZJb4hLCUxKLmny5EqDVk0yJ5adNQgZN3L1Ru-ynAvpLVpg/viewform?usp=sf_link", "_blank")
+  }
+  const handleHomeIconClick=()=>{
+    history.push('/')
+  }
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -100,12 +116,22 @@ function Header({userDocumentData, otherUsers}) {
       await logout();
       history.push('/')
     }catch{
-
+      console.log(e)
     }
   }
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const modalStyle={
+    display: requestIconClicked?'block':"none",
+    // position: 'absolute',
+    // zIndex: "2",
+    // top: "10vh",
+    // width: "18rem",
+    backgroundColor: "azure",
+    borderRadius: "10px"
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -118,8 +144,8 @@ function Header({userDocumentData, otherUsers}) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Feedback</MenuItem>
+      <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+      <MenuItem onClick={handleFeedbackClick}>Feedback</MenuItem>
       <MenuItem onClick={handlelogout}>Logout</MenuItem>
     </Menu>
   );
@@ -135,7 +161,7 @@ function Header({userDocumentData, otherUsers}) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem  onClick={handleHomeIconClick}>
         <IconButton aria-label="home" color="inherit">
           <HomeIcon />
         </IconButton>
@@ -147,9 +173,9 @@ function Header({userDocumentData, otherUsers}) {
         </IconButton>
         <p>Upload Video</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={()=>setRequestIconClicked(!requestIconClicked)}>
         <IconButton aria-label="notifications" color="inherit">
-          <Badge badgeContent={0} color="secondary">
+          <Badge badgeContent={userDocumentData?.friendRequests?.length} color="secondary">
             <PeopleIcon />
           </Badge>
         </IconButton>
@@ -274,12 +300,12 @@ function Header({userDocumentData, otherUsers}) {
                 </label>
               </div>
             </Tooltip>
-            <IconButton color="inherit">
+            <IconButton onClick={handleHomeIconClick} color="inherit">
               <HomeIcon />
             </IconButton>
             <Tooltip title="view follow requests">
               <IconButton color="inherit">
-                <Badge badgeContent={0} color="secondary">
+                <Badge badgeContent={userDocumentData?.friendRequests?.length} color="secondary">
                   <PeopleIcon />
                 </Badge>
               </IconButton>
@@ -308,6 +334,9 @@ function Header({userDocumentData, otherUsers}) {
           </div>
         </Toolbar>
       </AppBar>
+      <div aria-labelledby="simple-dialog-title" style={modalStyle}>
+        <FriendRequests requestArr={userDocumentData?.friendRequests} oUsers={otherUsers}/>
+      </div>
       <div className={progress===0||progress===100?classes.uploadProgressbarHide:classes.uploadProgressbarShow}>
       <LinearProgress variant="determinate" value={progress} />
       </div>

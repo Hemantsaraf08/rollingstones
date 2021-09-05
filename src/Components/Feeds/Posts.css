@@ -1,0 +1,84 @@
+#video-container{
+    width: 100vw;
+    height: 82vh;
+    overflow: scroll;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#video-container::-webkit-scrollbar {
+    display: none;
+}
+
+.single-vid-container{
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px 3px darkslategrey;
+    width: 42vw;
+    min-width: 380px;
+    height: 72%;
+    background-color: #e6f8f9;
+    margin: 10px;
+}
+
+
+.svid{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 15%;
+}
+
+.profile-info{
+    margin: 2px 21px;
+    padding-top: 3px
+}
+
+.vid-actions{
+    justify-content: space-around;
+    cursor: pointer;
+}
+
+.icon-styling{
+    cursor: pointer;
+}
+
+.dcontainer{
+    display: flex;
+    width: 69vw;
+    height: 82vh;
+    flex-direction: row;
+}
+
+.video-part{
+    width: 65%; 
+    height: 100%
+}
+
+.info-part{
+    width: 35%;
+    height: 100%;
+}
+
+video.video-styles2{
+    height: 100%;
+    width: 100%;
+}
+
+.emojibox{
+    display: flex
+}
+.emoji-mart{
+    width: 260px;
+    position: absolute;
+    top: 1px;
+}
+
+.MuiDialogContent-root:first-child
+{
+    padding-top: 0px !important;
+}
+.MuiDialogContent-root{
+    padding: 0px !important;
+}

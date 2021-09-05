@@ -4,8 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyle=makeStyles({
     videoElement:{
         width: "100%",
-        height: "80vh",
-        scrollSnapAlign: "start"
     }
 })
 function Video(props) {
@@ -25,7 +23,7 @@ function Video(props) {
     }
     return (
         <>
-          <video onEnded={handleAutoScroll} src={props.source} className={classes.videoElement} onClick={handleMute} muted="muted" type='video/mp4'/>  
+          <video onEnded={handleAutoScroll} src={props.source} className={classes.videoElement} id='singleVid'onClick={handleMute} muted="muted" type='video/mp4'/>  
         </>
     )
 }

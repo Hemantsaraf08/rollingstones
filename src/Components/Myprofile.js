@@ -3,17 +3,22 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { database } from "../firebase"
-import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { Divider } from '@material-ui/core';
 import Header from './Feeds/Header';
-import { AuthContext } from '../context/AuthProvider';
-const useStyles = makeStyles({
+import './profile.css'
+const useStyles = makeStyles(theme => ({
     loader: {
         position: 'absolute',
         left: '50%',
         top: '60%'
+    },
+    large: {
+        width: theme.spacing(7),
+        height: theme.spacing(7),
     }
-})
+}))
+
 const profileInfostyle = {
     display: 'flex',
     width: '100%',
@@ -40,55 +45,23 @@ const otherUserVidsstyle = {
     alignItems: 'stretch',
 }
 
-function OtherProfile(props) {
-
-    let userProfileObj = props.history.location.state.obj;
+function Myprofile(props) {
+    const userProfileObj = props.history.location.state.userDocumentData;
+    console.log(userProfileObj)
     const classes = useStyles();
     const [postsArr, setPostsArr] = useState(null);
-    const [buttontxt, setButtonTxt] = useState("Follow");
-    const { currentUser } = useContext(AuthContext);
-
-    useEffect(async () => {
-        //first time, setPostsArr and check text of button and disable if needed
-        let tempArr = [];
-        for (let i = 0; i < userProfileObj.postIds.length; i++) {
-            let postid = userProfileObj.postIds[i];
-            let eachPost = await database.posts.doc(postid).get();
-            if (eachPost.data()?.public) {
-                //public post
+    useEffect(() => {
+        async function fetchPosts() {
+            let tempArr = [];
+            for (let i = 0; i < userProfileObj.postIds.length; i++) {
+                let postid = userProfileObj.postIds[i];
+                let eachPost = await database.posts.doc(postid).get();
                 tempArr.push(eachPost.data())
             }
+            setPostsArr(tempArr);
         }
-        const currUserDoc = await database.users.doc(currentUser.uid).get();
-        const accept = currUserDoc.data().friendRequests.includes(userProfileObj.userId)
-
-        if (userProfileObj.friends?.includes(currentUser.uid)) {
-            setButtonTxt("Following");
-        } else if (userProfileObj.friendRequests?.includes(currentUser.uid)) {
-            setButtonTxt("Request Sent");
-        } else if (accept) {
-            setButtonTxt("Accept Follow Request");
-        }
-        setPostsArr(tempArr);
+        fetchPosts();
     }, [])
-    const handleClick = () => {
-        if (buttontxt === 'Follow') {
-            setButtonTxt("Request Sent");
-            database.users.doc(userProfileObj.userId).update({
-                friendRequests: [...userProfileObj.friendRequests, currentUser.uid]
-            });
-        } else if (buttontxt === 'Accept Follow Request') {
-            setButtonTxt("Following");
-            database.users.doc(userProfileObj.userId).update({
-                friends: [...userProfileObj.friends, currentUser.uid]
-            });
-            database.users.doc(currentUser.uid).get().then(currUD => {
-                database.users.doc(currentUser.uid).update({
-                    friends: [...currUD.friends, userProfileObj.userId]
-                });
-            }).catch(e => console.log(e))
-        }
-    }
     return (
         <>
             <Header></Header>
@@ -101,27 +74,27 @@ function OtherProfile(props) {
                     <div className="otherInfo" style={{ width: '80%' }}>
                         <h2 style={{ textAlign: 'center', margin: '4px' }}>{userProfileObj.username}</h2>
                         <div className="proflestats" style={profilestatsstyle}>
-                            <div className='postsStats' style={{ width: '50%',display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div className='postsStats' style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <Typography className="statsNumber" style={{ display: "block" }} variant='h4'>{userProfileObj.postIds.length}</Typography>
                                 <Typography className="statsText" style={{ display: "block" }}>Posts</Typography>
                             </div>
-                            <div className='followersStats' style={{ width: '50%',display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <div className='followersStats' style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <Typography className="statsNumber" style={{ display: "block" }} variant='h4'>{userProfileObj.friends?.length}</Typography>
                                 <Typography className="statsText" style={{ display: "block" }}>Followers</Typography>
                             </div>
                         </div>
-                        <Button onClick={handleClick} variant="contained" color="primary" disabled={buttontxt === "Following" || "Request Sent"}>{buttontxt}</Button>
                     </div>
                 </div>
                 <Divider style={{ height: '1.5px' }} />
                 <div className="VideoPosts" style={VideoPostsstyle}>
                     {
-                        userProfileObj.postIds.length === 0 ? <Typography style={{ textAlign: 'center' }} component="h4">No Posts to display</Typography> : postsArr == null ? <CircularProgress className={classes.loader} color="secondary" /> :
+
+                        userProfileObj.postIds.length === 0 ? <Typography variant="h4" style={{ textAlign: 'center' }}>No Posts to display</Typography> : postsArr == null ? <CircularProgress className={classes.loader} color="secondary" /> :
                             <div className='otherUserVids' style={otherUserVidsstyle}>
                                 {
                                     postsArr.map(post => (
                                         <div style={{ margin: '5px', borderRadius: '15px' }} key={post.pId}>
-                                        <video src={post.pUrl} muted id={post.pId} width='400'></video>
+                                            <video src={post.pUrl} muted id={post.pId} width='400' ></video>
                                         </div>
                                     ))
                                 }
@@ -133,4 +106,4 @@ function OtherProfile(props) {
     )
 }
 
-export default OtherProfile
+export default Myprofile

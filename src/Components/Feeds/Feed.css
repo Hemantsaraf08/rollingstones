@@ -6,9 +6,12 @@
 .feed-container{
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100vw;
     height: 82vh;
-    border: 2px solid;
+    overflow: auto;
     scrollbar-width: none;
 }
+
+.feed-container::-webkit-scrollbar {
+    display: none;
+  }

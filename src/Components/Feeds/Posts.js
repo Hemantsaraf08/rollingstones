@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import Card from '@material-ui/core/Card';
@@ -11,13 +11,20 @@ import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogContent from '@material-ui/core/DialogContent';
+import { Divider } from '@material-ui/core';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import Video from './Video';
 import { database } from "../../firebase"
 import './Posts.css'
 import Likes from './Likes';
 import Comments from './Comments';
 import Addcomments from './Addcomments';
-const useStyles = makeStyles({
+import { AuthContext } from '../../context/AuthProvider';
+
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         padding: '0px'
@@ -31,17 +38,28 @@ const useStyles = makeStyles({
         marginLeft: '2%'
     },
     seeComments: {
-        height: '54vh',
+        height: '85%',
         overflowY: 'auto'
     },
-    ci: {
-        color: 'white',
-        left: '9%',
-        cursor: 'pointer'
+    large: {
+        width: theme.spacing(7),
+        height: theme.spacing(7),
     },
-});
+    dialogBox: {
+        padding: '1rem'
+    },
+    fullCard: {
+        width: '100%',
+        height: '85%'
+    },
+    cardHeader: {
+        height: '15%'
+    }
+}));
 function Posts({ userData = null }) {
+
     const classes = useStyles();
+    const {currentUser}=useContext(AuthContext);
     const [posts, setPosts] = useState(null);
     const [openId, setOpenId] = useState(null);
     const handleClickOpen = (id) => {
@@ -57,7 +75,7 @@ function Posts({ userData = null }) {
         //callback of interection observer takes in an array of entries as parameter
         entries.forEach(element => {
             console.log(element);
-            let el = element.target.childNodes[0];
+            let el = element.target.childNodes[1].childNodes[0];
             //play is async and pause is sync;
             //strategy is to play all videos at first and then pause non intersecting vids
             el.play().then(() => {
@@ -68,9 +86,11 @@ function Posts({ userData = null }) {
             })
         })
     }
-    const observer = new IntersectionObserver(callback, { threshold: 0.85 })
+    const observer = new IntersectionObserver(callback, {
+        threshold: 0.85
+    })
     useEffect(() => {
-        let elements = document.querySelectorAll('.videos');
+        let elements = document.querySelectorAll('.single-vid-container');
         //attaching observer after the component mounts
         elements.forEach(el => {
             observer.observe(el);
@@ -98,8 +118,14 @@ function Posts({ userData = null }) {
             setPosts(postsArr);
         })
         return unsub;//cleanup
+    }, [])
+
+    const handlePostPrivacyChange=(post)=>{
+        let currVal=post.public;
+        database.posts.doc(post.postId).update({
+            public: !currVal
+        })
     }
-        , [])
     return (
         <>
             <div className='place'>
@@ -108,23 +134,41 @@ function Posts({ userData = null }) {
                 posts === null ? <CircularProgress className={classes.loader} color="secondary" /> :
                     <div className='video-container' id='video-container'>
                         {
-                            posts.map((post) => {
-                                console.log(post)
-                                return (
+                            posts.map((post) => (
                                     <React.Fragment key={post.postId}>
-                                        <div className='videos'>
-                                            <Video source={post.pUrl} id={post.pId} />
-                                            <div className='fa' style={{ display: 'flex' }}>
-                                                <Avatar src={post.uProfile}></Avatar>
-                                                <h4>{post.uName}</h4>
+                                        <div className='single-vid-container' style={{display:post.public||userData.friends.includes(post.userId)||post.userId===currentUser.uid?'block':'none'}}>
+                                            <div className='svid profile-info'>
+                                                <Avatar src={post.uProfile} ></Avatar>
+                                                <h4 style={{ marginLeft: '.8rem' }}>{post.uName}</h4>
+                                                <FormControl disabled={post.userId!==currentUser.uid} className={classes.formControl}>
+                                                    <InputLabel id="demo-simple-select-label">Post Privacy</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={post.public}
+                                                        onChange={(post)=>handlePostPrivacyChange(post)}
+                                                    >
+                                                        <MenuItem value={true}>Public</MenuItem>
+                                                        <MenuItem value={false}>Private</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </div>
+                                            <div style={{ height: "70%", overflow: "hidden" }}>
+                                                <Video source={post.pUrl} id={post.pId} />
+                                            </div>
+                                            <div className='svid vid-actions'>
+                                                <Likes userData={userData} userPostData={post} />
+                                                <Divider orientation="vertical" variant="middle" />
+                                                <div style={{ display: 'flex', width: '50%', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleClickOpen(post.pId)}>
+                                                    <div style={{ display: 'flex', flexDirection: "row", justifyContent: "space-evenly", width: '100%' }}>
+                                                        <Typography variant='h6'>Comment</Typography>
+                                                        <ChatBubbleIcon color="action" className={`icon-styling`} />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <Likes userData={userData} userPostData={post} />
-                                        <div onClick={() => handleClickOpen(post.pId)}>
-                                            <Typography>Comment</Typography>
-                                            <ChatBubbleIcon className={`${classes.ci} icon-styling`} />
-                                        </div>
-                                        <Dialog maxWidth="md" onClose={handleClose} aria-labelledby="customized-dialog-title" open={openId === post.pId}>
+
+                                        <Dialog maxWidth="md" className={classes.dialogBox} onClose={handleClose} aria-labelledby="customized-dialog-title" open={openId === post.pId}>
                                             <MuiDialogContent>
                                                 <div className='dcontainer'>
                                                     <div className='video-part'>
@@ -133,8 +177,8 @@ function Posts({ userData = null }) {
                                                         </video>
                                                     </div>
                                                     <div className='info-part'>
-                                                        <Card>
-                                                            <CardHeader
+                                                        <Card className={classes.fullCard}>
+                                                            <CardHeader className={classes.cardHeader}
                                                                 avatar={
                                                                     <Avatar src={post?.uProfile} aria-label="recipe" className={classes.avatar}>
                                                                     </Avatar>
@@ -153,8 +197,8 @@ function Posts({ userData = null }) {
                                                             </CardContent>
                                                         </Card>
                                                         <div className='extra'>
-                                                            <div className='likes' style={{ display: post.likes.length ? 'block' : 'none' }}>
-                                                                <Typography className={classes.typo} variant='subtitle2'>{post.likes.length} Likes</Typography>
+                                                            <div className='likes'>
+                                                                <Typography className={classes.typo} variant='h6'>{post.likes.length === 0 ? "No likes yet" : post.likes.length === 1 ? `${post.likes.length} Like` : `${post.likes.length} Likes`}</Typography>
                                                             </div>
                                                             <Addcomments userData={userData} postData={post} />
                                                         </div>
@@ -164,7 +208,6 @@ function Posts({ userData = null }) {
                                         </Dialog>
                                     </React.Fragment>
                                 )
-                            }
                             )
                         }
                     </div>
