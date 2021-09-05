@@ -123,16 +123,6 @@ function Header({userDocumentData, otherUsers}) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const modalStyle={
-    display: requestIconClicked?'block':"none",
-    // position: 'absolute',
-    // zIndex: "2",
-    // top: "10vh",
-    // width: "18rem",
-    backgroundColor: "azure",
-    borderRadius: "10px"
-  }
-
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -304,7 +294,7 @@ function Header({userDocumentData, otherUsers}) {
               <HomeIcon />
             </IconButton>
             <Tooltip title="view follow requests">
-              <IconButton color="inherit">
+              <IconButton onClick={()=>setRequestIconClicked(!requestIconClicked)} color="inherit">
                 <Badge badgeContent={userDocumentData?.friendRequests?.length} color="secondary">
                   <PeopleIcon />
                 </Badge>
@@ -334,9 +324,10 @@ function Header({userDocumentData, otherUsers}) {
           </div>
         </Toolbar>
       </AppBar>
-      <div aria-labelledby="simple-dialog-title" style={modalStyle}>
-        <FriendRequests requestArr={userDocumentData?.friendRequests} oUsers={otherUsers}/>
-      </div>
+      {
+        requestIconClicked?<FriendRequests requestArr={userDocumentData?.friendRequests} oUsers={otherUsers}/>:<></>
+      }
+        
       <div className={progress===0||progress===100?classes.uploadProgressbarHide:classes.uploadProgressbarShow}>
       <LinearProgress variant="determinate" value={progress} />
       </div>

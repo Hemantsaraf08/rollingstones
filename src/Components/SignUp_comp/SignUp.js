@@ -15,6 +15,7 @@ import {Link as RouterLink} from "react-router-dom"
 import bpic from "./signup_bg.png"
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     formBlock: {
@@ -224,12 +225,14 @@ function SignUp() {
                         placeholder="Password"
                         variant="outlined" required
                     />
+                    <div className='upload-btn-container' style={{display: 'flex'}}>
                     <input 
                     type="file" 
                     accept='image/*'
                     onChange={handleFileSubmit}
                     style={{ display: "none" }}
                     id='icon-button-file'
+                    required
                     ></input> 
                     <label htmlFor='icon-button-file' style={{alignItems:"center", display:"flex", justifyContent:'center'}}>
                     <Button
@@ -244,6 +247,10 @@ function SignUp() {
                         Select Profile Image
                     </Button>
                     </label>
+                    <div style={{display:file?'block':'none'}}>
+                        <DoneOutlineIcon style={{color:'green'}}/>
+                    </div>
+                    </div>
                     <Button variant="contained" color="primary" type="submit" disabled={loading}>
                         Create Account
                     </Button>

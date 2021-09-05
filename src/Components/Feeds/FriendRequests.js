@@ -6,12 +6,21 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+const modalStyle={
+  position: 'fixed',
+  zIndex: "4",
+  right: '3rem',
+  top: "12%",
+  width: "18rem",
+  backgroundColor: "azure",
+  borderRadius: "10px"
+}
 
 function FriendRequests({requestArr, oUsers}) {
     const [resultArr, setResultArr]=useState(null);
     const history=useHistory();
     useEffect(()=>{
-        let res=oUsers.filter(userObj=>requestArr.includes(userObj.userId))
+        let res=oUsers?.filter(userObj=>requestArr?.includes(userObj.userId))
         setResultArr(res);
     },[requestArr])
 
@@ -22,7 +31,7 @@ function FriendRequests({requestArr, oUsers}) {
         })
       }
     return (
-        <div>
+        <div style={modalStyle}>
             {resultArr?.length === 0 ? <DialogTitle id="simple-dialog-title">No requests to display..</DialogTitle> : <>
           <List>
             {resultArr?.map((userObj) => (

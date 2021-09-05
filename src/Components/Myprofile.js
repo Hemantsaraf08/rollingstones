@@ -53,7 +53,7 @@ function Myprofile(props) {
     useEffect(() => {
         async function fetchPosts() {
             let tempArr = [];
-            for (let i = 0; i < userProfileObj.postIds.length; i++) {
+            for (let i = 0; i < userProfileObj?.postIds?.length; i++) {
                 let postid = userProfileObj.postIds[i];
                 let eachPost = await database.posts.doc(postid).get();
                 tempArr.push(eachPost.data())
@@ -69,17 +69,17 @@ function Myprofile(props) {
             <div style={{ width: '75vw', minWidth: '400px', display: 'flex', flexDirection: 'column', backgroundColor: '#e6f8f9', borderRadius: '1.5rem', boxShadow: "0px 2px 5px 2px darkslategrey", padding: '10px', marginTop: '15px', margin: 'auto', justifyContent: 'center' }}>
                 <div className="profileInfo" style={profileInfostyle}>
                     <div className="profileAvatar">
-                        <Avatar style={{ height: '6rem', width: '6rem' }} src={userProfileObj.profileUrl} />
+                        <Avatar style={{ height: '6rem', width: '6rem' }} src={userProfileObj?.profileUrl} />
                     </div>
-                    <div className="otherInfo" style={{ width: '80%' }}>
-                        <h2 style={{ textAlign: 'center', margin: '4px' }}>{userProfileObj.username}</h2>
+                    <div className="otherInfo" style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <h2 style={{ textAlign: 'center', margin: '4px' }}>{userProfileObj?.username}</h2>
                         <div className="proflestats" style={profilestatsstyle}>
                             <div className='postsStats' style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <Typography className="statsNumber" style={{ display: "block" }} variant='h4'>{userProfileObj.postIds.length}</Typography>
+                                <Typography className="statsNumber" style={{ display: "block" }} variant='h4'>{userProfileObj?.postIds?.length}</Typography>
                                 <Typography className="statsText" style={{ display: "block" }}>Posts</Typography>
                             </div>
                             <div className='followersStats' style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <Typography className="statsNumber" style={{ display: "block" }} variant='h4'>{userProfileObj.friends?.length}</Typography>
+                                <Typography className="statsNumber" style={{ display: "block" }} variant='h4'>{userProfileObj?.friends?.length}</Typography>
                                 <Typography className="statsText" style={{ display: "block" }}>Followers</Typography>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ function Myprofile(props) {
                 <div className="VideoPosts" style={VideoPostsstyle}>
                     {
 
-                        userProfileObj.postIds.length === 0 ? <Typography variant="h4" style={{ textAlign: 'center' }}>No Posts to display</Typography> : postsArr == null ? <CircularProgress className={classes.loader} color="secondary" /> :
+                        userProfileObj?.postIds?.length === 0 ? <Typography variant="h4" style={{ textAlign: 'center' }}>No Posts to display</Typography> : postsArr == null ? <CircularProgress className={classes.loader} color="secondary" /> :
                             <div className='otherUserVids' style={otherUserVidsstyle}>
                                 {
                                     postsArr.map(post => (

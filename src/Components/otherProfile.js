@@ -5,6 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { database } from "../firebase"
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { Divider } from '@material-ui/core';
 import Header from './Feeds/Header';
 import { AuthContext } from '../context/AuthProvider';
 const useStyles = makeStyles({
@@ -75,17 +76,19 @@ function OtherProfile(props) {
         if (buttontxt === 'Follow') {
             setButtonTxt("Request Sent");
             database.users.doc(userProfileObj.userId).update({
-                friendRequests: [...userProfileObj.friendRequests, currentUser.uid]
+                friendRequests: [...userProfileObj?.friendRequests, currentUser.uid]
             });
         } else if (buttontxt === 'Accept Follow Request') {
             setButtonTxt("Following");
             database.users.doc(userProfileObj.userId).update({
                 friends: [...userProfileObj.friends, currentUser.uid]
             });
-            database.users.doc(currentUser.uid).get().then(currUD => {
+            database.users.doc(currentUser.uid).get()
+            .then(currUD => {
                 database.users.doc(currentUser.uid).update({
-                    friends: [...currUD.friends, userProfileObj.userId]
-                });
+                    friends: [...currUD.data().friends, userProfileObj.userId],
+                    friendRequests:currUD.data().friendRequests.filter(id=>id!==userProfileObj.userId)
+                }).catch(e=>console.log(e))
             }).catch(e => console.log(e))
         }
     }
@@ -98,7 +101,7 @@ function OtherProfile(props) {
                     <div className="profileAvatar">
                         <Avatar style={{ height: '6rem', width: '6rem' }} src={userProfileObj.profileUrl} />
                     </div>
-                    <div className="otherInfo" style={{ width: '80%' }}>
+                    <div className="otherInfo" style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                         <h2 style={{ textAlign: 'center', margin: '4px' }}>{userProfileObj.username}</h2>
                         <div className="proflestats" style={profilestatsstyle}>
                             <div className='postsStats' style={{ width: '50%',display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -110,7 +113,7 @@ function OtherProfile(props) {
                                 <Typography className="statsText" style={{ display: "block" }}>Followers</Typography>
                             </div>
                         </div>
-                        <Button onClick={handleClick} variant="contained" color="primary" disabled={buttontxt === "Following" || "Request Sent"}>{buttontxt}</Button>
+                        <Button onClick={handleClick} style={{width: '68%'}}variant="contained" color="primary" disabled={buttontxt === "Following" ||buttontxt === "Request Sent"}>{buttontxt}</Button>
                     </div>
                 </div>
                 <Divider style={{ height: '1.5px' }} />

@@ -54,7 +54,11 @@ const useStyles = makeStyles((theme) => ({
     },
     cardHeader: {
         height: '15%'
-    }
+    },
+    formControl: {
+        marginLeft: '40%',
+        minWidth:100,
+    },
 }));
 function Posts({ userData = null }) {
 
@@ -113,6 +117,7 @@ function Posts({ userData = null }) {
             querySnapshot.forEach((doc) => {
                 console.log(doc.data(), +"  " + doc.id);
                 let data = { ...doc.data(), postId: doc.id }
+                // console.log(data);
                 postsArr.push(data)
             })
             setPosts(postsArr);
@@ -120,10 +125,10 @@ function Posts({ userData = null }) {
         return unsub;//cleanup
     }, [])
 
-    const handlePostPrivacyChange=(post)=>{
-        let currVal=post.public;
-        database.posts.doc(post.postId).update({
-            public: !currVal
+    const handlePostPrivacyChange=(e,id)=>{
+        // console.log(id)
+        database.posts.doc(id).update({
+            public: e.target.value
         })
     }
     return (
@@ -136,7 +141,7 @@ function Posts({ userData = null }) {
                         {
                             posts.map((post) => (
                                     <React.Fragment key={post.postId}>
-                                        <div className='single-vid-container' style={{display:post.public||userData.friends.includes(post.userId)||post.userId===currentUser.uid?'block':'none'}}>
+                                        <div className='single-vid-container' style={{display:post?.public||userData?.friends?.includes(post?.userId)||post?.userId===currentUser.uid?'block':'none'}}>
                                             <div className='svid profile-info'>
                                                 <Avatar src={post.uProfile} ></Avatar>
                                                 <h4 style={{ marginLeft: '.8rem' }}>{post.uName}</h4>
@@ -146,7 +151,7 @@ function Posts({ userData = null }) {
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
                                                         value={post.public}
-                                                        onChange={(post)=>handlePostPrivacyChange(post)}
+                                                        onChange={(e)=>handlePostPrivacyChange(e,post.postId)}
                                                     >
                                                         <MenuItem value={true}>Public</MenuItem>
                                                         <MenuItem value={false}>Private</MenuItem>

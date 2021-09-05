@@ -71,7 +71,7 @@ function Search({ oUsers }) {
     
     console.log(txt)
     
-    let res = oUsers.filter(usersObj => usersObj.username.toLowerCase().includes(txt.trim().toLowerCase()));
+    let res = oUsers?.filter(usersObj => usersObj.username.toLowerCase().includes(txt.trim().toLowerCase()));
     if(txt.length === 0){
       res=[];
     }
