@@ -18,7 +18,7 @@
 -->Emoji box for comments <br />
 -->Users Profile page with stats <br />
 
-###Watch the app in action in the demo below:
+### Watch the app in action in the demo below:
 https://github.com/Hemantsaraf08/rollingstones/blob/main/Rollingstone%20app%20demo%20video.mp4
 
 ### Implementation and other details available at:
