@@ -43,7 +43,11 @@ const otherUserVidsstyle = {
 
 function OtherProfile(props) {
 
-    let userProfileObj = props.history.location.state.obj;
+    let userProfileObj = props.history.location.state.obj;//INCORRECT
+    //dont access location from history as history is mutable 
+    
+    //INSTEAD ACCESS LOCATION DIRECTLY FROM PROPS
+    //let userProfileObj = props.location.state.obj;
     const classes = useStyles();
     const [postsArr, setPostsArr] = useState(null);
     const [buttontxt, setButtonTxt] = useState("Follow");
